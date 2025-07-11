@@ -3,27 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>À propos - Palmini & HBIS Services</title>
+    <title>À propos - HBI Service</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Palmini & HBIS Services</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="about.html">À propos</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <nav>
+                <div class="logo"><span style="color:var(--primary-gold);font-size:2rem;font-weight:bold;">HBI</span></div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+            </nav>
+        </div>
     </header>
-    <section>
-        <h2>À propos</h2>
-        <p>Palmini Services et HBIS Services unissent leurs forces pour proposer un service de taxi et VTC 100&nbsp;% électrique à Marseille.</p>
-        <p>Stéphane conduit une Tesla Model 3 et Hamid une Mercedes EQA 250+. Ensemble, nous assurons des trajets confortables et respectueux de l'environnement.</p>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>À propos de HBI Service</h1>
+            <p>Taxi premium 100% électrique à Marseille</p>
+        </div>
+    </section>
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Notre Histoire</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>HBI Service est né de l'association de passionnés du transport haut de gamme à Marseille. Avec une expérience de plus de 15 ans, nous proposons un service de taxi premium respectueux de l'environnement grâce à notre Mercedes EQS électrique.</p>
+                    <p>Notre objectif est de fournir un transport sûr, confortable et ponctuel pour tous vos déplacements professionnels ou personnels.</p>
+                </div>
+            </div>
+        </div>
     </section>
     <footer>
-        <p>&copy; 2024 Palmini & HBIS Services</p>
+        <div class="container">
+            <p>&copy; 2024 HBI Service - Tous droits réservés</p>
+        </div>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
