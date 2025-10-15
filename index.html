@@ -679,6 +679,78 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
+        .driver-selection {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .driver-card {
+            position: relative;
+        }
+
+        .driver-card input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .driver-card label {
+            display: block;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .driver-card label strong {
+            display: block;
+            font-size: 18px;
+            color: var(--light-text);
+        }
+
+        .driver-card label span {
+            display: block;
+            margin-top: 6px;
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        .driver-card input:checked + label {
+            border-color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.12);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .calendar-status {
+            margin: 15px 0 25px 0;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        .calendar-status strong {
+            color: var(--primary-gold);
+        }
+
+        .calendar-status.available {
+            border-color: rgba(76, 175, 80, 0.4);
+            background: rgba(76, 175, 80, 0.12);
+            color: #b4ffce;
+        }
+
+        .calendar-status.unavailable {
+            border-color: rgba(244, 67, 54, 0.4);
+            background: rgba(244, 67, 54, 0.12);
+            color: #ffb4a9;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -702,11 +774,65 @@
             transition: all 0.3s ease;
         }
 
+        .form-group input[readonly] {
+            opacity: 0.75;
+        }
+
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: var(--primary-gold);
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .pricing-summary {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--light-text);
+        }
+
+        .pricing-summary h4 {
+            margin-bottom: 10px;
+            color: var(--primary-gold);
+            font-size: 18px;
+        }
+
+        .pricing-summary p {
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .payment-section {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .payment-section h4 {
+            margin-bottom: 15px;
+            color: var(--primary-gold);
+            font-size: 18px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .payment-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .payment-disclaimer {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--gray-text);
         }
 
         .form-note {
@@ -746,6 +872,11 @@
         @media (max-width: 768px) {
             .logo {
                 height: 120px;
+            }
+
+            .driver-selection,
+            .payment-grid {
+                grid-template-columns: 1fr;
             }
 
             .nav-menu {
@@ -1152,7 +1283,31 @@
                             ⚠️ Réservation minimum 24h à l'avance<br>
                             Pour une course immédiate, appelez-nous directement
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label>Choix du chauffeur & véhicule *</label>
+                            <div class="driver-selection">
+                                <div class="driver-card">
+                                    <input type="radio" id="driver-stephane" name="driver" value="stephane" required>
+                                    <label for="driver-stephane">
+                                        <strong>Stéphane</strong>
+                                        <span>Tesla Model 3 Grande Autonomie</span>
+                                    </label>
+                                </div>
+                                <div class="driver-card">
+                                    <input type="radio" id="driver-hamid" name="driver" value="hamid" required>
+                                    <label for="driver-hamid">
+                                        <strong>Hamid</strong>
+                                        <span>Mercedes Classe E 300e</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="calendarStatus" class="calendar-status">
+                            Sélectionnez un chauffeur puis une date de prise en charge pour vérifier sa disponibilité.
+                        </div>
+
                         <div class="form-group">
                             <label for="name">Nom & Prénom *</label>
                             <input type="text" id="name" name="name" required>
@@ -1177,12 +1332,24 @@
                             <label for="dropoff">Lieu de dépose *</label>
                             <input type="text" id="dropoff" name="dropoff" placeholder="Ex: Aéroport Marseille-Provence" required>
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label for="distance">Distance estimée (km)</label>
+                            <input type="text" id="distance" name="distance" placeholder="En attente du calcul..." readonly>
+                            <input type="hidden" id="distanceMeters" name="distanceMeters">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="duration">Durée estimée</label>
+                            <input type="text" id="duration" name="duration" placeholder="En attente du calcul..." readonly>
+                            <input type="hidden" id="durationSeconds" name="durationSeconds">
+                        </div>
+
                         <div class="form-group">
                             <label for="date">Date & Heure *</label>
                             <input type="datetime-local" id="date" name="date" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="passengers">Nombre de passagers</label>
                             <select id="passengers" name="passengers">
@@ -1192,18 +1359,41 @@
                                 <option value="4">4 passagers</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="payment">Mode de paiement *</label>
-                            <select id="payment" name="payment" required>
-                                <option value="">Choisir une option</option>
-                                <option value="acompte">Acompte 30% (CB en ligne)</option>
-                                <option value="total">Paiement total (CB en ligne)</option>
-                                <option value="especes">Espèces (au chauffeur)</option>
-                                <option value="entreprise">Facturation entreprise</option>
-                            </select>
+
+                        <div class="pricing-summary" id="pricingSummary">
+                            <h4>Résumé tarifaire estimatif</h4>
+                            <p><strong>Créneau horaire :</strong> <span id="pricingSlot">--</span></p>
+                            <p><strong>Tarif kilométrique :</strong> <span id="pricingPerKm">--</span></p>
+                            <p><strong>Distance estimée :</strong> <span id="pricingDistance">--</span></p>
+                            <p><strong>Total prévisionnel :</strong> <span id="pricingTotal">--</span></p>
                         </div>
-                        
+
+                        <div class="payment-section">
+                            <h4>Paiement sécurisé par carte bleue</h4>
+                            <div class="payment-grid">
+                                <div class="form-group">
+                                    <label for="cardHolder">Titulaire de la carte *</label>
+                                    <input type="text" id="cardHolder" name="cardHolder" autocomplete="cc-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardNumber">Numéro de carte *</label>
+                                    <input type="text" id="cardNumber" name="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardExpiry">Date d'expiration (MM/AA) *</label>
+                                    <input type="text" id="cardExpiry" name="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="07/27" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardCvc">Cryptogramme (CVC) *</label>
+                                    <input type="text" id="cardCvc" name="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required>
+                                </div>
+                            </div>
+                            <p class="payment-disclaimer">
+                                Les informations de carte sont chiffrées et utilisées uniquement pour le paiement immédiat de votre course.
+                                Pour la mise en production, renseignez vos clés Stripe ou tout autre PSP compatible.
+                            </p>
+                        </div>
+
                         <div class="form-group">
                             <label for="message">Message complémentaire</label>
                             <input type="text" id="message" name="message" placeholder="Précisions, demandes particulières...">
@@ -1232,7 +1422,516 @@
     </footer>
 
     <script>
-        // Menu mobile toggle
+        const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
+        const DEFAULT_SERVICE_MINUTES = 90;
+        const SAFETY_BUFFER_MINUTES = 20;
+        const WEEKEND_MULTIPLIER = 1.15;
+        const LATE_NIGHT_MULTIPLIER = 1.1;
+        const pricingRules = [
+            { label: 'Heures de jour (06h00 - 20h00)', startHour: 6, endHour: 20, base: 18, perKm: 1.8 },
+            { label: 'Soirée (20h00 - 00h00)', startHour: 20, endHour: 24, base: 22, perKm: 2.1 },
+            { label: 'Nuit (00h00 - 06h00)', startHour: 0, endHour: 6, base: 25, perKm: 2.4 }
+        ];
+        const currencyFormatter = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+
+        function generateBusySlots(presets) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return presets.map(({ daysFromNow, startHour, startMinute = 0, durationMinutes = DEFAULT_SERVICE_MINUTES, summary = 'Course confirmée' }) => {
+                const start = new Date(today);
+                start.setDate(start.getDate() + daysFromNow);
+                start.setHours(startHour, startMinute, 0, 0);
+                const end = new Date(start.getTime() + durationMinutes * 60000);
+                return { start, end, summary };
+            });
+        }
+
+        const driverCalendars = {
+            stephane: {
+                name: 'Stéphane',
+                vehicle: 'Tesla Model 3 Grande Autonomie',
+                busySlots: generateBusySlots([
+                    { daysFromNow: 1, startHour: 9, durationMinutes: 120, summary: 'Transfert entreprise' },
+                    { daysFromNow: 2, startHour: 14, durationMinutes: 90, summary: 'Circuit touristique' },
+                    { daysFromNow: 4, startHour: 7, durationMinutes: 150, summary: 'Navette aéroport' }
+                ]),
+                icsUrls: []
+            },
+            hamid: {
+                name: 'Hamid',
+                vehicle: 'Mercedes Classe E 300e',
+                busySlots: generateBusySlots([
+                    { daysFromNow: 0, startHour: 16, durationMinutes: 120, summary: 'Course événementielle' },
+                    { daysFromNow: 3, startHour: 10, durationMinutes: 180, summary: 'Séminaire entreprise' },
+                    { daysFromNow: 5, startHour: 6, durationMinutes: 90, summary: 'Navette gare' }
+                ]),
+                icsUrls: []
+            }
+        };
+
+        const reservationForm = document.getElementById('reservationForm');
+        const pickupInput = document.getElementById('pickup');
+        const dropoffInput = document.getElementById('dropoff');
+        const distanceField = document.getElementById('distance');
+        const distanceMetersField = document.getElementById('distanceMeters');
+        const durationField = document.getElementById('duration');
+        const durationSecondsField = document.getElementById('durationSeconds');
+        const dateField = document.getElementById('date');
+        const calendarStatus = document.getElementById('calendarStatus');
+        const driverRadios = Array.from(document.querySelectorAll('input[name="driver"]'));
+        const pricingSlot = document.getElementById('pricingSlot');
+        const pricingPerKm = document.getElementById('pricingPerKm');
+        const pricingDistance = document.getElementById('pricingDistance');
+        const pricingTotal = document.getElementById('pricingTotal');
+        const cardHolderInput = document.getElementById('cardHolder');
+        const cardNumberInput = document.getElementById('cardNumber');
+        const cardExpiryInput = document.getElementById('cardExpiry');
+        const cardCvcInput = document.getElementById('cardCvc');
+
+        let googleMapsReady = false;
+        let distanceMatrixService = null;
+        let pickupLocation = null;
+        let dropoffLocation = null;
+        let currentPricing = { total: null, rule: null, distanceKm: null, weekend: false };
+
+        async function syncDriverCalendars() {
+            const driverEntries = Object.entries(driverCalendars);
+            await Promise.all(driverEntries.map(async ([driverId, driver]) => {
+                driver.externalBusySlots = [];
+                if (!driver.icsUrls || driver.icsUrls.length === 0) {
+                    return;
+                }
+                for (const url of driver.icsUrls) {
+                    try {
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            console.warn('Impossible de récupérer le calendrier de', driver.name, url);
+                            continue;
+                        }
+                        const icsData = await response.text();
+                        const events = parseICS(icsData);
+                        driver.externalBusySlots.push(...events);
+                    } catch (error) {
+                        console.warn('Erreur lors de la synchronisation du calendrier pour', driver.name, error);
+                    }
+                }
+            }));
+            updateCalendarStatus();
+        }
+
+        function parseICS(icsText) {
+            const events = [];
+            const lines = icsText.split(/\r?\n/);
+            let currentEvent = null;
+            lines.forEach(line => {
+                if (line.startsWith('BEGIN:VEVENT')) {
+                    currentEvent = {};
+                } else if (line.startsWith('END:VEVENT')) {
+                    if (currentEvent && currentEvent.start && currentEvent.end) {
+                        events.push({
+                            start: currentEvent.start,
+                            end: currentEvent.end,
+                            summary: currentEvent.summary || 'Événement externe'
+                        });
+                    }
+                    currentEvent = null;
+                } else if (currentEvent) {
+                    if (line.startsWith('DTSTART')) {
+                        currentEvent.start = parseICSDate(line.split(':').slice(1).join(':'));
+                    } else if (line.startsWith('DTEND')) {
+                        currentEvent.end = parseICSDate(line.split(':').slice(1).join(':'));
+                    } else if (line.startsWith('SUMMARY')) {
+                        currentEvent.summary = line.split(':').slice(1).join(':');
+                    }
+                }
+            });
+            return events.filter(event => event.start && event.end);
+        }
+
+        function parseICSDate(value) {
+            if (!value) return null;
+            if (value.endsWith('Z')) {
+                return new Date(value);
+            }
+            if (/^\d{8}T\d{6}$/.test(value)) {
+                const year = Number(value.slice(0, 4));
+                const month = Number(value.slice(4, 6)) - 1;
+                const day = Number(value.slice(6, 8));
+                const hour = Number(value.slice(9, 11));
+                const minute = Number(value.slice(11, 13));
+                const second = Number(value.slice(13, 15));
+                return new Date(year, month, day, hour, minute, second);
+            }
+            if (/^\d{8}$/.test(value)) {
+                const year = Number(value.slice(0, 4));
+                const month = Number(value.slice(4, 6)) - 1;
+                const day = Number(value.slice(6, 8));
+                return new Date(year, month, day);
+            }
+            return new Date(value);
+        }
+
+        function getDriverBusySlots(driverId) {
+            const driver = driverCalendars[driverId];
+            if (!driver) {
+                return [];
+            }
+            const baseSlots = driver.busySlots ? [...driver.busySlots] : [];
+            if (driver.externalBusySlots && driver.externalBusySlots.length > 0) {
+                baseSlots.push(...driver.externalBusySlots);
+            }
+            return baseSlots;
+        }
+
+        function getSelectedDriverId() {
+            const checked = driverRadios.find(radio => radio.checked);
+            return checked ? checked.value : null;
+        }
+
+        function formatDateTime(date) {
+            return date.toLocaleString('fr-FR', {
+                weekday: 'short',
+                day: '2-digit',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatDateRange(start, end) {
+            if (!start || !end) return '';
+            const sameDay = start.toDateString() === end.toDateString();
+            if (sameDay) {
+                const dayPart = start.toLocaleDateString('fr-FR', {
+                    weekday: 'short',
+                    day: '2-digit',
+                    month: 'short'
+                });
+                const startHour = start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                const endHour = end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                return `${dayPart} ${startHour} - ${endHour}`;
+            }
+            return `${formatDateTime(start)} → ${formatDateTime(end)}`;
+        }
+
+        function checkDriverAvailability(driverId, startDate) {
+            const driver = driverCalendars[driverId];
+            if (!driver || !startDate) {
+                return { available: true };
+            }
+
+            const busySlots = getDriverBusySlots(driverId);
+            const travelDurationMinutes = Math.max(
+                DEFAULT_SERVICE_MINUTES,
+                Math.ceil((Number(durationSecondsField.value) || 0) / 60) + SAFETY_BUFFER_MINUTES
+            );
+            const requestedStart = new Date(startDate.getTime());
+            const requestedEnd = new Date(requestedStart.getTime() + travelDurationMinutes * 60000);
+
+            for (const slot of busySlots) {
+                if (!slot.start || !slot.end) continue;
+                if (requestedStart < slot.end && requestedEnd > slot.start) {
+                    return {
+                        available: false,
+                        conflictingSlot: slot,
+                        requestedEnd
+                    };
+                }
+            }
+
+            return {
+                available: true,
+                requestedEnd
+            };
+        }
+
+        function updateCalendarStatus() {
+            if (!calendarStatus) return;
+            calendarStatus.classList.remove('available', 'unavailable');
+            const driverId = getSelectedDriverId();
+            if (!driverId) {
+                calendarStatus.textContent = 'Sélectionnez un chauffeur puis une date de prise en charge pour vérifier sa disponibilité.';
+                return;
+            }
+            const driver = driverCalendars[driverId];
+            if (!dateField.value) {
+                calendarStatus.innerHTML = `<strong>${driver.name}</strong> — en attente de la sélection d\'une date de prise en charge.`;
+                return;
+            }
+            const startDate = new Date(dateField.value);
+            if (Number.isNaN(startDate.getTime())) {
+                calendarStatus.textContent = 'Veuillez saisir une date de prise en charge valide.';
+                return;
+            }
+
+            const availability = checkDriverAvailability(driverId, startDate);
+            const busySlots = getDriverBusySlots(driverId)
+                .filter(slot => slot.start && slot.start >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+                .sort((a, b) => a.start - b.start)
+                .slice(0, 3);
+
+            if (availability.available) {
+                calendarStatus.classList.add('available');
+                calendarStatus.innerHTML = `<strong>${driver.name}</strong> est disponible.<br>Créneau réservé jusqu'à ${formatDateTime(availability.requestedEnd)}.`;
+            } else {
+                calendarStatus.classList.add('unavailable');
+                const conflictRange = formatDateRange(availability.conflictingSlot.start, availability.conflictingSlot.end);
+                calendarStatus.innerHTML = `<strong>${driver.name}</strong> est déjà réservé sur le créneau ${conflictRange}.<br>Choisissez un autre horaire ou un autre chauffeur.`;
+            }
+
+            if (busySlots.length > 0) {
+                const upcoming = busySlots
+                    .map(slot => `• ${formatDateRange(slot.start, slot.end)}${slot.summary ? ` – ${slot.summary}` : ''}`)
+                    .join('<br>');
+                calendarStatus.innerHTML += `<br><br><strong>Prochaines réservations :</strong><br>${upcoming}`;
+            }
+        }
+
+        function detectPricingRule(date) {
+            const hour = date.getHours();
+            return pricingRules.find(rule => {
+                if (rule.startHour <= rule.endHour) {
+                    return hour >= rule.startHour && hour < rule.endHour;
+                }
+                return hour >= rule.startHour || hour < rule.endHour;
+            }) || pricingRules[0];
+        }
+
+        function updatePricingSummary() {
+            const distanceKm = currentPricing.distanceKm;
+            const dateValue = dateField.value;
+
+            if (!distanceKm || !dateValue) {
+                pricingSlot.textContent = '--';
+                pricingPerKm.textContent = '--';
+                pricingDistance.textContent = distanceKm ? `${distanceKm.toFixed(2).replace('.', ',')} km` : '--';
+                pricingTotal.textContent = '--';
+                currentPricing.total = null;
+                return;
+            }
+
+            const rideDate = new Date(dateValue);
+            if (Number.isNaN(rideDate.getTime())) {
+                pricingSlot.textContent = '--';
+                pricingPerKm.textContent = '--';
+                pricingDistance.textContent = '--';
+                pricingTotal.textContent = '--';
+                currentPricing.total = null;
+                return;
+            }
+
+            const rule = detectPricingRule(rideDate);
+            const isWeekend = rideDate.getDay() === 0 || rideDate.getDay() === 6;
+            let adjustedPerKm = rule.perKm;
+            let total = rule.base + distanceKm * adjustedPerKm;
+
+            if (isWeekend) {
+                adjustedPerKm *= WEEKEND_MULTIPLIER;
+                total *= WEEKEND_MULTIPLIER;
+            }
+
+            if (rideDate.getHours() >= 22 || rideDate.getHours() < 5) {
+                adjustedPerKm *= LATE_NIGHT_MULTIPLIER;
+                total *= LATE_NIGHT_MULTIPLIER;
+            }
+
+            total = Math.max(total, 30);
+
+            currentPricing = {
+                ...currentPricing,
+                rule,
+                total,
+                distanceKm,
+                weekend: isWeekend
+            };
+
+            pricingSlot.textContent = `${rule.label}${isWeekend ? ' (week-end)' : ''}`;
+            pricingPerKm.textContent = `${adjustedPerKm.toFixed(2).replace('.', ',')} € / km`;
+            pricingDistance.textContent = `${distanceKm.toFixed(2).replace('.', ',')} km`;
+            pricingTotal.textContent = currencyFormatter.format(total);
+        }
+
+        function loadGoogleMapsScript() {
+            if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') {
+                distanceField.placeholder = 'Ajoutez votre clé API Google Maps pour calculer automatiquement la distance.';
+                durationField.placeholder = 'Ajoutez votre clé API Google Maps pour estimer la durée.';
+                console.warn('Configurez GOOGLE_MAPS_API_KEY pour activer le calcul automatique de distance.');
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&language=fr&region=FR&callback=initReservationMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+
+        function calculateDistance() {
+            const pickupValue = pickupInput.value.trim();
+            const dropoffValue = dropoffInput.value.trim();
+            if (!pickupValue || !dropoffValue) {
+                return;
+            }
+            if (!googleMapsReady || !distanceMatrixService) {
+                distanceField.placeholder = 'En attente de l\'initialisation de Google Maps...';
+                durationField.placeholder = 'En attente de l\'initialisation de Google Maps...';
+                return;
+            }
+
+            const origin = pickupLocation || pickupValue;
+            const destination = dropoffLocation || dropoffValue;
+
+            distanceMatrixService.getDistanceMatrix({
+                origins: [origin],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC,
+                drivingOptions: {
+                    departureTime: dateField.value ? new Date(dateField.value) : new Date(),
+                    trafficModel: google.maps.TrafficModel.BEST_GUESS
+                }
+            }, (response, status) => {
+                if (status !== 'OK') {
+                    console.error('Erreur Google Distance Matrix:', status, response);
+                    distanceField.value = '';
+                    distanceField.placeholder = 'Erreur de calcul. Vérifiez les adresses.';
+                    durationField.value = '';
+                    durationField.placeholder = 'Erreur de calcul.';
+                    distanceMetersField.value = '';
+                    durationSecondsField.value = '';
+                    currentPricing.distanceKm = null;
+                    updatePricingSummary();
+                    updateCalendarStatus();
+                    return;
+                }
+
+                const element = response.rows?.[0]?.elements?.[0];
+                if (!element || element.status !== 'OK') {
+                    distanceField.value = '';
+                    distanceField.placeholder = 'Distance indisponible pour cet itinéraire.';
+                    durationField.value = '';
+                    durationField.placeholder = 'Durée indisponible.';
+                    distanceMetersField.value = '';
+                    durationSecondsField.value = '';
+                    currentPricing.distanceKm = null;
+                    updatePricingSummary();
+                    updateCalendarStatus();
+                    return;
+                }
+
+                const distanceMeters = element.distance.value;
+                const durationSeconds = element.duration_in_traffic?.value || element.duration.value;
+                const distanceKm = distanceMeters / 1000;
+                const durationMinutes = Math.round(durationSeconds / 60);
+
+                distanceField.value = distanceKm.toFixed(2).replace('.', ',');
+                distanceField.placeholder = '';
+                distanceMetersField.value = String(distanceMeters);
+
+                const hours = Math.floor(durationMinutes / 60);
+                const minutes = durationMinutes % 60;
+                durationField.value = hours > 0 ? `${hours}h${minutes.toString().padStart(2, '0')}` : `${minutes} min`;
+                durationField.placeholder = '';
+                durationSecondsField.value = String(durationSeconds);
+
+                currentPricing.distanceKm = distanceKm;
+                updatePricingSummary();
+                updateCalendarStatus();
+            });
+        }
+
+        window.initReservationMap = function initReservationMap() {
+            googleMapsReady = true;
+            distanceMatrixService = new google.maps.DistanceMatrixService();
+            const autocompleteOptions = {
+                componentRestrictions: { country: ['fr'] },
+                fields: ['formatted_address', 'geometry']
+            };
+
+            const pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, autocompleteOptions);
+            pickupAutocomplete.addListener('place_changed', () => {
+                const place = pickupAutocomplete.getPlace();
+                pickupLocation = place?.geometry?.location || null;
+                if (place?.formatted_address) {
+                    pickupInput.value = place.formatted_address;
+                }
+                calculateDistance();
+            });
+
+            const dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, autocompleteOptions);
+            dropoffAutocomplete.addListener('place_changed', () => {
+                const place = dropoffAutocomplete.getPlace();
+                dropoffLocation = place?.geometry?.location || null;
+                if (place?.formatted_address) {
+                    dropoffInput.value = place.formatted_address;
+                }
+                calculateDistance();
+            });
+
+            if (pickupInput.value && dropoffInput.value) {
+                calculateDistance();
+            }
+        };
+
+        function sanitizeCardNumber(value) {
+            return value.replace(/\D/g, '');
+        }
+
+        function luhnCheck(number) {
+            let sum = 0;
+            let shouldDouble = false;
+            for (let i = number.length - 1; i >= 0; i -= 1) {
+                let digit = parseInt(number.charAt(i), 10);
+                if (shouldDouble) {
+                    digit *= 2;
+                    if (digit > 9) {
+                        digit -= 9;
+                    }
+                }
+                sum += digit;
+                shouldDouble = !shouldDouble;
+            }
+            return sum % 10 === 0;
+        }
+
+        function validateExpiry(value) {
+            const match = /^([0-1]\d)\/(\d{2})$/.exec(value);
+            if (!match) return false;
+            const month = Number(match[1]);
+            const year = Number(match[2]);
+            if (month < 1 || month > 12) return false;
+            const now = new Date();
+            const currentYear = now.getFullYear() % 100;
+            const currentMonth = now.getMonth() + 1;
+            if (year < currentYear) return false;
+            if (year === currentYear && month < currentMonth) return false;
+            return true;
+        }
+
+        function validateCardData(cardData) {
+            if (!cardData.holder) {
+                return { valid: false, message: 'Veuillez renseigner le titulaire de la carte.' };
+            }
+            if (cardData.number.length < 12 || !luhnCheck(cardData.number)) {
+                return { valid: false, message: 'Le numéro de carte semble invalide.' };
+            }
+            if (!validateExpiry(cardData.expiry)) {
+                return { valid: false, message: 'La date d\'expiration est invalide ou dépassée.' };
+            }
+            if (!/^\d{3,4}$/.test(cardData.cvc)) {
+                return { valid: false, message: 'Le cryptogramme visuel doit comporter 3 ou 4 chiffres.' };
+            }
+            return { valid: true };
+        }
+
+        async function simulateCardPayment(amount, cardData) {
+            await new Promise(resolve => setTimeout(resolve, 1200));
+            if (cardData.number === '4000000000000002') {
+                return { success: false, message: 'Carte refusée (code test).' };
+            }
+            const reference = `SIM-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+            return { success: true, transactionId: reference };
+        }
+
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
 
@@ -1240,15 +1939,13 @@
             navMenu.classList.toggle('active');
         });
 
-        // Fermer le menu quand on clique sur un lien
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('active');
             });
         });
 
-        // Animation du header au scroll
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function onScroll() {
             const header = document.querySelector('header');
             const logo = document.querySelector('.logo');
             if (window.scrollY > 50) {
@@ -1262,31 +1959,8 @@
             }
         });
 
-        // Validation du formulaire
-        document.getElementById('reservationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const date = new Date(document.getElementById('date').value);
-            const now = new Date();
-            const hoursDiff = (date - now) / (1000 * 60 * 60);
-            
-            if (hoursDiff < 24) {
-                alert('⚠️ La réservation doit être effectuée au moins 24h à l\'avance.\n\nPour une course immédiate, veuillez nous appeler directement au +33 6 00 00 00 00');
-                return;
-            }
-            
-            // Ici, vous pouvez ajouter l'intégration avec Google Calendar
-            // et le traitement du paiement
-            
-            alert('✅ Votre demande de réservation a été envoyée avec succès !\n\nNous vous confirmerons votre course par téléphone dans les plus brefs délais.\n\nPour toute modification, contactez-nous au +33 6 00 00 00 00');
-            
-            // Réinitialiser le formulaire
-            this.reset();
-        });
-
-        // Animation smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function smoothScroll(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -1298,11 +1972,127 @@
             });
         });
 
-        // Définir la date minimum à 24h dans le futur
-        const dateInput = document.getElementById('date');
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        dateInput.min = tomorrow.toISOString().slice(0, 16);
+        driverRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                updateCalendarStatus();
+            });
+        });
+
+        dateField.addEventListener('change', () => {
+            if (googleMapsReady) {
+                calculateDistance();
+            }
+            updatePricingSummary();
+            updateCalendarStatus();
+        });
+
+        pickupInput.addEventListener('blur', calculateDistance);
+        dropoffInput.addEventListener('blur', calculateDistance);
+        pickupInput.addEventListener('change', calculateDistance);
+        dropoffInput.addEventListener('change', calculateDistance);
+
+        cardNumberInput.addEventListener('input', () => {
+            const digits = sanitizeCardNumber(cardNumberInput.value).slice(0, 19);
+            cardNumberInput.value = digits.replace(/(.{4})/g, '$1 ').trim();
+        });
+
+        cardExpiryInput.addEventListener('input', () => {
+            const digits = cardExpiryInput.value.replace(/\D/g, '').slice(0, 4);
+            cardExpiryInput.value = digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+        });
+
+        cardCvcInput.addEventListener('input', () => {
+            cardCvcInput.value = cardCvcInput.value.replace(/\D/g, '').slice(0, 4);
+        });
+
+        reservationForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const driverId = getSelectedDriverId();
+            if (!driverId) {
+                alert('Veuillez sélectionner un chauffeur pour votre course.');
+                return;
+            }
+
+            if (!dateField.value) {
+                alert('Veuillez indiquer une date et une heure de prise en charge.');
+                return;
+            }
+
+            const pickupDate = new Date(dateField.value);
+            if (Number.isNaN(pickupDate.getTime())) {
+                alert('La date de prise en charge est invalide.');
+                return;
+            }
+
+            const now = new Date();
+            const hoursDiff = (pickupDate - now) / (1000 * 60 * 60);
+            if (hoursDiff < 24) {
+                alert('⚠️ La réservation doit être effectuée au moins 24h à l\'avance.\n\nPour une course immédiate, veuillez nous appeler directement au +33 7 55 66 23 79.');
+                return;
+            }
+
+            const availability = checkDriverAvailability(driverId, pickupDate);
+            if (!availability.available) {
+                const conflictRange = formatDateRange(availability.conflictingSlot.start, availability.conflictingSlot.end);
+                alert(`Le chauffeur ${driverCalendars[driverId].name} est indisponible sur ce créneau (${conflictRange}).\nMerci de sélectionner un autre horaire ou un autre chauffeur.`);
+                return;
+            }
+
+            if (!currentPricing.total) {
+                alert('Le calcul du tarif est en cours. Veuillez patienter quelques instants.');
+                return;
+            }
+
+            const cardData = {
+                holder: cardHolderInput.value.trim(),
+                number: sanitizeCardNumber(cardNumberInput.value),
+                expiry: cardExpiryInput.value.trim(),
+                cvc: cardCvcInput.value.trim()
+            };
+
+            const cardValidation = validateCardData(cardData);
+            if (!cardValidation.valid) {
+                alert(cardValidation.message);
+                return;
+            }
+
+            const paymentResult = await simulateCardPayment(currentPricing.total, cardData);
+            if (!paymentResult.success) {
+                alert(`Le paiement a été refusé : ${paymentResult.message}`);
+                return;
+            }
+
+            alert(`✅ Paiement confirmé !\n\nRéservation enregistrée pour ${driverCalendars[driverId].name} (${driverCalendars[driverId].vehicle}).\nMontant débité : ${currencyFormatter.format(currentPricing.total)}\nRéférence paiement : ${paymentResult.transactionId}.\n\nUn email de confirmation vous sera envoyé sous peu.`);
+
+            reservationForm.reset();
+            pickupLocation = null;
+            dropoffLocation = null;
+            distanceField.value = '';
+            distanceField.placeholder = 'En attente du calcul...';
+            distanceMetersField.value = '';
+            durationField.value = '';
+            durationField.placeholder = 'En attente du calcul...';
+            durationSecondsField.value = '';
+            currentPricing = { total: null, rule: null, distanceKm: null, weekend: false };
+            pricingSlot.textContent = '--';
+            pricingPerKm.textContent = '--';
+            pricingDistance.textContent = '--';
+            pricingTotal.textContent = '--';
+            calendarStatus.classList.remove('available', 'unavailable');
+            calendarStatus.textContent = 'Sélectionnez un chauffeur puis une date de prise en charge pour vérifier sa disponibilité.';
+        });
+
+        function enforceMinimumDate() {
+            const minDate = new Date();
+            minDate.setHours(minDate.getHours() + 24);
+            dateField.min = minDate.toISOString().slice(0, 16);
+        }
+
+        enforceMinimumDate();
+        updateCalendarStatus();
+        updatePricingSummary();
+        syncDriverCalendars();
+        loadGoogleMapsScript();
     </script>
 </body>
 </html>
